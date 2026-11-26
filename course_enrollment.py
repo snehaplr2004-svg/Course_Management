@@ -11,26 +11,21 @@ class Enrollment:
     def enroll(self, name, course, duration, date, fee, status):
         try:
             cursor = self.connection.cursor()
-
             if duration <= 0 or fee < 0:
                 print("Invalid duration or fee")
             else:
                 query = "insert into enrollments(student_name,course_name,duration_months,enrollment_date,fee,status) values(%s,%s,%s,%s,%s,%s)"
-
                 data = (name, course, duration, date, fee, status)
 
                 cursor.execute(query, data)
                 self.connection.commit()
-
                 print("Enrolled Successfully")
-
         except:
             print("Failed to enroll")
-
     def read(self):
         try:
             cursor = self.connection.cursor()
-            query = "SELECT * FROM enrollments order by fee desc"
+            query = "select * from enrollments order by fee desc"
             cursor.execute(query)
             records = cursor.fetchall()
             if records:
@@ -39,7 +34,7 @@ class Enrollment:
             else:
                 print("No records found")
         except:
-            print("Failed to read:")
+            print("Failed to read")
 
     def retrieve(self, choice, value):
         try:
@@ -68,21 +63,13 @@ class Enrollment:
         try:
             cursor = self.connection.cursor()
             if fee == "":
-                query = """
-                UPDATE enrollments
-                SET status=%s
-                WHERE enrollment_id=%s
-                """
+                query = "UPDATE enrollments SET status=%s WHERE enrollment_id=%s"
                 data = (status, id)
             else:
                 if float(fee) < 0:
                     print("Fee cannot be negative")
                     return
-                query = """
-                UPDATE enrollments
-                SET status=%s, fee=%s
-                WHERE enrollment_id=%s
-                """
+                query = " UPDATE enrollments SET status=%s, fee=%s WHERE enrollment_id=%s"
                 data = (status, float(fee), id)
 
             cursor.execute(query, data)
@@ -169,7 +156,7 @@ while True:
             i = int(input("Enter enrollment ID: "))
             status = input("Enter new status: ")
 
-            fee = input("Enter new fee (Press Enter to skip): ")
+            fee = input("Enter new fee: ")
 
             p.update(i, status, fee)
 
